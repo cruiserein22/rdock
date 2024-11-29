@@ -91,7 +91,7 @@ ENV PATH /opt/conda/envs/$CONDA_DEFAULT_ENV/bin:$PATH
 
 ### Install Rope
 WORKDIR /workspace
-RUN git clone https://github.com/Hillobar/Rope.git
+RUN git clone https://github.com/Alucard24/Rope.git
 WORKDIR /workspace/Rope
 
 ### Install dependencies. Fix Models.py backslash path
@@ -115,7 +115,7 @@ EXPOSE 8585
 COPY ./src/vnc_startup_jupyterlab_filebrowser.sh /dockerstartup/vnc_startup.sh
 RUN chmod 765 /dockerstartup/vnc_startup.sh
 
-ENV VNC_RESOLUTION=1280x1024
+ENV VNC_RESOLUTION=1600x1200
 
 ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
 CMD ["--wait"]
