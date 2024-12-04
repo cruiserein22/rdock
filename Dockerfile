@@ -15,19 +15,19 @@ ENV DISPLAY=:1 \
     VNC_PORT=5901 \
     NO_VNC_PORT=6901
 EXPOSE $VNC_PORT $NO_VNC_PORT
-
 ### Envrionment config
-ENV HOME=/workspace \
+ENV HOME=/teamspace/studios/this_studio \
     TERM=xterm \
-    STARTUPDIR=/dockerstartup \
-    INST_SCRIPTS=/workspace/install \
-    NO_VNC_HOME=/workspace/noVNC \
+    STARTUPDIR=/teamspace/studios/this_studio/dockerstartup \
+    INST_SCRIPTS=/teamspace/studios/this_studio/install \
+    NO_VNC_HOME=/teamspace/studios/this_studio/noVNC \
     DEBIAN_FRONTEND=noninteractive \
     VNC_COL_DEPTH=24 \
     VNC_PW=vncpassword \
     VNC_VIEW_ONLY=false \
     TZ=Asia/Seoul
 WORKDIR $HOME
+### Make all scripts executable
 
 ### Install necessary dependencies
 RUN apt-get update && apt-get install -y \
@@ -90,18 +90,18 @@ RUN echo "source activate $CONDA_DEFAULT_ENV" >> ~/.bashrc
 ENV PATH /opt/conda/envs/$CONDA_DEFAULT_ENV/bin:$PATH
 
 ### Install Rope
-WORKDIR /workspace
+WORKDIR /teamspace/studios/this_studio
 RUN git clone https://github.com/Alucard24/Rope.git
-WORKDIR /workspace/Rope
+WORKDIR /teamspace/studios/this_studio/Rope
 
 ### Install dependencies. Fix Models.py backslash path
 RUN pip install -r ./requirements.txt --no-cache-dir
-COPY ./src/Models.py /workspace/Rope/rope/Models.py
+COPY ./src/Models.py /teamspace/studios/this_studio/Rope/rope/Models.py
 
 ### Download models
-WORKDIR /workspace/Rope/models
+WORKDIR /teamspace/studios/this_studio/Rope/models
 RUN wget -qO- https://api.github.com/repos/Hillobar/Rope/releases/tags/Sapphire | jq -r '.assets[] | .browser_download_url' | xargs -n 1 wget
-WORKDIR /workspace/Rope
+WORKDIR /teamspace/studios/this_studio/Rope
 
 ### Install jupyterlab
 RUN pip install jupyterlab
@@ -110,9 +110,17 @@ EXPOSE 8080
 ### Install filebrowser
 RUN wget -O - https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
 EXPOSE 8585
-
+RUN chmod +x $INST_SCRIPTS/tools.sh \
+    && chmod +x $INST_SCRIPTS/install_custom_fonts.sh \
+    && chmod +x $INST_SCRIPTS/tigervnc.sh \
+    && chmod +x $INST_SCRIPTS/no_vnc_1.5.0.sh \
+    && chmod +x $INST_SCRIPTS/firefox.sh \
+    && chmod +x $INST_SCRIPTS/xfce_ui.sh \
+    && chmod +x $INST_SCRIPTS/libnss_wrapper.sh \
+    && chmod +x $INST_SCRIPTS/set_user_permission.sh
 ### Reconfigure startup
 COPY ./src/vnc_startup_jupyterlab_filebrowser.sh /dockerstartup/vnc_startup.sh
+
 RUN chmod 765 /dockerstartup/vnc_startup.sh
 
 ENV VNC_RESOLUTION=1280x1024
