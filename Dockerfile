@@ -115,7 +115,7 @@ EXPOSE 8585
 COPY ./src/vnc_startup_jupyterlab_filebrowser.sh /dockerstartup/vnc_startup.sh
 RUN chmod 765 /dockerstartup/vnc_startup.sh
 
-ENV VNC_RESOLUTION=1600x1200
+ENV VNC_RESOLUTION=1280x1024
 
 ENTRYPOINT ["/dockerstartup/vnc_startup.sh"]
 CMD ["--wait"]
