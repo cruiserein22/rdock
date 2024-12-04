@@ -57,7 +57,15 @@ ENV PATH /opt/conda/bin:$PATH
 ### Add all install scripts for further steps
 ADD ./src/common/install/ $INST_SCRIPTS/
 ADD ./src/debian/install/ $INST_SCRIPTS/
-
+RUN chmod +x $INST_SCRIPTS/tools.sh \
+    && chmod +x $INST_SCRIPTS/install_custom_fonts.sh \
+    && chmod +x $INST_SCRIPTS/tigervnc.sh \
+    && chmod +x $INST_SCRIPTS/no_vnc_1.5.0.sh \
+    && chmod +x $INST_SCRIPTS/firefox.sh \
+    && chmod +x $INST_SCRIPTS/xfce_ui.sh \
+    && chmod +x $INST_SCRIPTS/libnss_wrapper.sh \
+    && chmod +x $INST_SCRIPTS/set_user_permission.sh
+### Reconfigure startup
 ### Install some common tools
 RUN $INST_SCRIPTS/tools.sh
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
